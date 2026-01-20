@@ -5054,7 +5054,7 @@ function DrawGraphic() {
 						if (yval > ymax) {
 							yval = ymax;
 						}
-						stack1.marker.color[nn] = HexToRgbA(RGBint(yval - ymin, ymax), parhst[ppt].opaci);
+						stack1.marker.color[nn] = HexToRgbA(RGBint((yval - ymin)/(ymax - ymin), 1), parhst[ppt].opaci);
 					}
 					if (parhst[ppt].sndyaxis) {
 						zstack.x[nn] = vdat[ind].x;
@@ -12446,7 +12446,7 @@ function UpdateGraph() { // RESTORE async
 							if (yval > ymax) {
 								yval = ymax;
 							}
-							graphDiv.data[0].marker.color[i] = HexToRgbA(RGBint(yval - ymin, ymax), parhst[ppt].opaci);
+							graphDiv.data[0].marker.color[i] = HexToRgbA(RGBint((yval - ymin)/(ymax - ymin), 1), parhst[ppt].opaci); 
 						}
 					} else {
 						graphDiv.data[0].marker.color = HexToRgbA(parhst[ppt].ptcolor, parhst[ppt].opaci);

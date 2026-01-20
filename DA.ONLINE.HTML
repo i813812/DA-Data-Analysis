@@ -7,7 +7,6 @@
 
 <script id="IDPLOTLY" src="https://cdn.plot.ly/plotly-basic-3.2.0.min.js"></script>
 
-
 <script>
 //
 // (C)hristoph Weyd - c.weyd@sap.com / christoph.weyd@gmail.com
@@ -5058,7 +5057,7 @@ function DrawGraphic() {
 						if (yval > ymax) {
 							yval = ymax;
 						}
-						stack1.marker.color[nn] = HexToRgbA(RGBint(yval - ymin, ymax), parhst[ppt].opaci);
+						stack1.marker.color[nn] = HexToRgbA(RGBint((yval - ymin)/(ymax - ymin), 1), parhst[ppt].opaci);
 					}
 					if (parhst[ppt].sndyaxis) {
 						zstack.x[nn] = vdat[ind].x;
@@ -12450,7 +12449,7 @@ function UpdateGraph() { // RESTORE async
 							if (yval > ymax) {
 								yval = ymax;
 							}
-							graphDiv.data[0].marker.color[i] = HexToRgbA(RGBint(yval - ymin, ymax), parhst[ppt].opaci);
+							graphDiv.data[0].marker.color[i] = HexToRgbA(RGBint((yval - ymin)/(ymax - ymin), 1), parhst[ppt].opaci); 
 						}
 					} else {
 						graphDiv.data[0].marker.color = HexToRgbA(parhst[ppt].ptcolor, parhst[ppt].opaci);
@@ -12610,7 +12609,6 @@ function Update() {
 // -->
   </script>
 
-
   <script>
 /*!
 
@@ -12630,6 +12628,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 <script id="IDJSZIP" src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.mini.min.js"></script>
 <script id="IDDOM2IMAGE" src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image-more/3.7.1/dom-to-image-more.min.js"></script>
 
+
+ 
 </head>
 <style>
       table { border-collapse: collapse;  }
