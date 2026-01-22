@@ -1908,7 +1908,8 @@ function AgregateData() {
 			for (let n = 0; n < vdat.length; n++) {
 				// let dmy = parseInt(Math.random().toString().substring(3, 7))/10000;
 				// let rnd = (dmy - 0.5) * mind;
-				let rnd = (Math.random() - 0.5) * 2 * mind;
+				// let rnd = (Math.random() - 0.5) * 2 * mind;
+				let rnd = (Math.random() - Math.random()) * mind;  // triangular distribution
 				rnd = Math.round(rnd * 1000) / 1000;
 				if (parhst[ppt].sely1 !== "-") {
 					if (Math.abs(vdat[n].y1) >= mind) {
