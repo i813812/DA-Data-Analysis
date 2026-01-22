@@ -5592,6 +5592,8 @@ function DrawGraphic() {
 			graphDiv.on("plotly_relayout", function(eventdata) {
 				p0 = PerfNow();
 				ScaleAxis(eventdata);
+				const xpos = eventdata["legend.x"]; if (xpos !== undefined) { parhst[ppt].mlegposx = xpos; }
+				const ypos = eventdata["legend.y"]; if (ypos !== undefined) { parhst[ppt].mlegposy = ypos; }
 				// Parameters();
 				if (restyle) {
 					restyle = false;
@@ -9223,8 +9225,6 @@ function ProcessFiles(event) {
 							parhst[ppt].hstinpmin = "";
 							parhst[ppt].hstinpmax = "";
 							// parhst[ppt].maxpnt = 1000;
-							parhst[ppt].mlegposx = 1.05;
-							parhst[ppt].mlegposx = 1;
 							data = container.gdata;
 							header = container.ghead;
 							DAC = true;
