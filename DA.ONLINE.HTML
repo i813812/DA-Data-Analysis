@@ -50,7 +50,7 @@
 /* exported ScaleAxis, SelDatFrm, SelChk, SetData, SHdr, Small, ShowErrors, Showhistogram, SortPrvData, SortData, */
 /* exported SortVdatStack, SplitHdr, TabKey, TriangleThreeBuckets, CalcTriangle, UpdateGraph, Update */
 // -->
-var prgvers = "16.04 (2026/01/20)";
+var prgvers = "16.04 (2026/01/23)";
 var data = ["##DATA##"];
 var header = ["##HEADER##"];
 // arrays
@@ -103,6 +103,7 @@ var hdrs = 1;
 var hsel = "min";
 var hstmax = "";
 var hstmin = "";
+var imgres = 5000; 
 var impel = null;
 var init = true;
 var keyshift = false;
@@ -1367,8 +1368,8 @@ function Action(e) {
 						filename = filename.replace(/ /g, '.');
 						let gw = 1440;
 						do {
-							gw = parseInt(prompt("Specify Base Resolution (900 - 4000)", gw));
-							if (gw >= 900 && gw <= 4000) {
+							gw = parseInt(prompt("Specify Base Resolution (900 - imgres)", gw));
+							if (gw >= 900 && gw <= imgres) {
 								break;
 							}
 						} while (true);
@@ -11328,11 +11329,11 @@ async function mergeHistGraphToDataUrlFast(histUrl, grphUrl, opts = {}) {
 async function plotlyToJpegWithQuality(gd, {
 	scale = 2.128,
 	quality = 0.96 // 0.0 … 1.0
-} = {}) {
+	} = {}) {
 	try {
 
 		let w = document.getElementById("IDgrpbox").clientWidth + document.getElementById("IDhstbox").clientWidth;
-		scale = 4000 / w;
+		scale = imgres / w;
 
 		// Step 1: get Plotly image (PNG internally, even if you ask for jpeg)
 		const dataUrl = await Plotly.toImage(gd, {
@@ -11375,7 +11376,7 @@ async function ParametersToPNG() {
 
 		const rect = parm.getBoundingClientRect();
 		let scale = window.devicePixelRatio || 2;
-		let zoom = (4000 / rect.width) || 2;
+		let zoom = (imgres / rect.width) || 2;
 
 		// Force exact dimensions on the cloned node
 		const dataUrl = await domtoimage.toPng(node, {
@@ -12613,7 +12614,6 @@ function Update() {
 
 <script id="IDJSXLSX" src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.mini.min.js"></script>
 <script id="IDDOM2IMAGE" src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image-more/3.7.1/dom-to-image-more.min.js"></script>
-
 
  
 </head>
