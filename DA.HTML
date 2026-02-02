@@ -46,7 +46,7 @@
 /* exported ScaleAxis, SelDatFrm, SelChk, SetData, SHdr, Small, ShowErrors, Showhistogram, SortPrvData, SortData, */
 /* exported SortVdatStack, SplitHdr, TabKey, TriangleThreeBuckets, CalcTriangle, UpdateGraph, Update */
 // -->
-var prgvers = "16.04 (2026/01/23)";
+var prgvers = "16.04 (2026/01/28)";
 var data = ["##DATA##"];
 var header = ["##HEADER##"];
 // arrays
@@ -1873,8 +1873,9 @@ function AgregateData() {
 			let nn = 0;
 			let yval = [];
 			for (let n = 0; n < vdat.length; n++) {
+				const idx = Math.floor(Math.random() * ( vdat.length - 1 ));
 				yval[nn] = {
-					y: vdat[n].y1 + vdat[n].y2 + vdat[n].y3 + vdat[n].y4
+					y: vdat[idx].y1 + vdat[idx].y2 + vdat[idx].y3 + vdat[idx].y4
 				};
 				yval[nn].y = parseFloat(yval[nn].y.toPrecision(6));
 
@@ -1896,60 +1897,65 @@ function AgregateData() {
 				return 0;
 			});
 			// find smallest difference between 2 values
-			let mind = yval[yval.length - 1].y - yval[0].y;
+			let mind = 0;
 			for (let n = 1; n < yval.length; n++) {
 				let dif = yval[n].y - yval[n - 1].y;
 				dif = parseFloat(dif.toPrecision(6));
+				if (mind == 0 && dif > 0 ) {
+					mind = dif;
+				}
 				if (dif > 0 && dif < mind) {
 					mind = dif;
 				}
 			}
-			mind = parseFloat(mind.toPrecision(6));
-			// add random decimals
-			for (let n = 0; n < vdat.length; n++) {
-				// let dmy = parseInt(Math.random().toString().substring(3, 7))/10000;
-				// let rnd = (dmy - 0.5) * mind;
-				// let rnd = (Math.random() - 0.5) * 2 * mind;
-				let rnd = (Math.random() - Math.random()) * mind;  // triangular distribution
-				rnd = Math.round(rnd * 1000) / 1000;
-				if (parhst[ppt].sely1 !== "-") {
-					if (Math.abs(vdat[n].y1) >= mind) {
-						vdat[n].y1 += rnd;
+			if (mind > 0) { 
+				mind = parseFloat(mind.toPrecision(6));
+				// add random decimals
+				for (let n = 0; n < vdat.length; n++) {
+					// let dmy = parseInt(Math.random().toString().substring(3, 7))/10000;
+					// let rnd = (dmy - 0.5) * mind;
+					// let rnd = (Math.random() - 0.5) * 2 * mind;
+					let rnd = (Math.random() - Math.random()) * mind;  // triangular distribution
+					rnd = Math.round(rnd * 1000) / 1000;
+					if (parhst[ppt].sely1 !== "-") {
+						if (Math.abs(vdat[n].y1) >= mind) {
+							vdat[n].y1 += rnd;
+						}
+						if (Math.abs(vdat[n].y1) === 0) {
+							vdat[n].y1 = Math.random() * mind;
+						}
 					}
-					if (Math.abs(vdat[n].y1) === 0) {
-						vdat[n].y1 = Math.random() * mind;
+					if (parhst[ppt].sely2 !== "-") {
+						if (Math.abs(vdat[n].y2) >= mind) {
+							vdat[n].y2 += rnd;
+						}
+						if (Math.abs(vdat[n].y2) === 0) {
+							vdat[n].y2 += Math.random() * mind;
+						}
 					}
-				}
-				if (parhst[ppt].sely2 !== "-") {
-					if (Math.abs(vdat[n].y2) >= mind) {
-						vdat[n].y2 += rnd;
+					if (parhst[ppt].sely3 !== "-") {
+						if (Math.abs(vdat[n].y3) >= mind) {
+							vdat[n].y3 += rnd;
+						}
+						if (Math.abs(vdat[n].y3) === 0) {
+							vdat[n].y3 += Math.random() * mind;
+						}
 					}
-					if (Math.abs(vdat[n].y2) === 0) {
-						vdat[n].y2 += Math.random() * mind;
+					if (parhst[ppt].sely4 !== "-") {
+						if (Math.abs(vdat[n].y4) >= mind) {
+							vdat[n].y4 += rnd;
+						}
+						if (Math.abs(vdat[n].y4) === 0) {
+							vdat[n].y4 += Math.random() * mind;
+						}
 					}
-				}
-				if (parhst[ppt].sely3 !== "-") {
-					if (Math.abs(vdat[n].y3) >= mind) {
-						vdat[n].y3 += rnd;
-					}
-					if (Math.abs(vdat[n].y3) === 0) {
-						vdat[n].y3 += Math.random() * mind;
-					}
-				}
-				if (parhst[ppt].sely4 !== "-") {
-					if (Math.abs(vdat[n].y4) >= mind) {
-						vdat[n].y4 += rnd;
-					}
-					if (Math.abs(vdat[n].y4) === 0) {
-						vdat[n].y4 += Math.random() * mind;
-					}
-				}
-				if (parhst[ppt].sely5 !== "-") {
-					if (Math.abs(vdat[n].y5) >= mind) {
-						vdat[n].y5 += rnd;
-					}
-					if (Math.abs(vdat[n].y5) === 0) {
-						vdat[n].y5 += Math.random() * mind;
+					if (parhst[ppt].sely5 !== "-") {
+						if (Math.abs(vdat[n].y5) >= mind) {
+							vdat[n].y5 += rnd;
+						}
+						if (Math.abs(vdat[n].y5) === 0) {
+							vdat[n].y5 += Math.random() * mind;
+						}
 					}
 				}
 			}
@@ -1994,6 +2000,8 @@ function Bhdr() {
 				document.getElementById("IDcol").innerHTML = "";
 				document.getElementById("IDnew").innerHTML = "";
 				document.getElementById("IDcnv").innerHTML = "";
+				document.getElementById("IDUpp").innerHTML = "";
+				document.getElementById("IDLow").innerHTML = "";
 				document.getElementById("IDclc").innerHTML = "";
 				document.getElementById("IDpie").innerHTML = "";
 			} catch (err) {}
@@ -2291,10 +2299,10 @@ function CalcMaxMinAvg() {
 		}
 
 		// minimum/maximum X-axis
-		// if ( xmin === "" || xmax === "") {
-		//  xmin = vdat[0].x;
-		//  xmax = vdat[vdat.length - 1].x;
-		// }
+		if ( xmin === "" || xmax === "") {
+			xmin = vdat[0].x;
+			xmax = vdat[vdat.length - 1].x;
+		}
 		// default max/min values for histogram
 		if (parhst[ppt].showhist || parhst[ppt].trdlin != "OFF") {
 			for (let n = 0; n < vdat.length; n++) {
@@ -3593,7 +3601,7 @@ function Del2ndRow() {
 				tmp[n][1] = tmp[n][1] + data[n][dateind];
 			}
 			if (timeind != 9999) {
-				tmp[n][1] = tmp[n][2] + data[n][timeind];
+				tmp[n][2] = tmp[n][2] + data[n][timeind];
 			}
 		}
 		// sort by date/time and original index
@@ -3647,7 +3655,7 @@ function Del2ndRow() {
 		data = data.filter(row => row[row.length - 1] !== "");
 		// update #counter column = 1
 		for (let n = 0; n < data.length; n++) {
-			data[n][countind] = 1;
+			data[n][countind] = "1";
 		}
 		SortPrvData();
 		for (let n = 0; n < header.length; n++) {
@@ -4528,7 +4536,7 @@ function DrawGraphic() {
 						tmin = vdat[i].x;
 					}
 				}
-				document.getElementById("TXT.xinpmin").value = parhst[ppt].xinpmin = tmin;
+				document.getElementById("TXT.xinpmin").value = parhst[ppt].xinpmin = xmin = tmin;
 			}
 			if (parhst[ppt].xinpmax === "") {
 				let tmax = vdat[0].x;
@@ -4537,7 +4545,7 @@ function DrawGraphic() {
 						tmax = vdat[i].x;
 					}
 				}
-				document.getElementById("TXT.xinpmax").value = parhst[ppt].xinpmax = tmax;
+				document.getElementById("TXT.xinpmax").value = parhst[ppt].xinpmax = xmax = tmax;
 			}
 			if ((parhst[ppt].selx1 != "-" && header[parseInt(parhst[ppt].selx1)][1] == "d" &&
 					parhst[ppt].selx2 != "-" && header[parseInt(parhst[ppt].selx2)][1] == "t" &&
@@ -4552,30 +4560,7 @@ function DrawGraphic() {
 				xmin = parhst[ppt].xinpmin;
 				xmax = parhst[ppt].xinpmax;
 				tick0 = xmin;
-			} else {
-				// category
-				xmin = 0;
-				try {
-					for (let i = 0; i < vdat.length; i++) {
-						xmin = i;
-						if (vdat[i].x.trim() > parhst[ppt].xinpmin.trim()) {
-							break;
-						}
-					}
-					txmin = vdat[Math.ceil(xmin)].x;
-					tick0 = xmin;
-					parhst[ppt].xinpmin = document.getElementById("TXT.xinpmin").value = txmin;
-					xmax = vdat.length - 1;
-					for (let i = vdat.length - 1; i > 0; i--) {
-						if (vdat[i].x.trim() < parhst[ppt].xinpmax.trim()) {
-							break;
-						}
-						xmax = i;
-					}
-					txmax = vdat[Math.floor(xmax)].x;
-					parhst[ppt].xinpmax = document.getElementById("TXT.xinpmax").value = txmax;
-				} catch (err) {}
-			}
+			} 
 			slayout = {
 				paper_bgcolor: parhst[ppt].chcolor,
 				plot_bgcolor: parhst[ppt].bgcolor,
@@ -4583,6 +4568,7 @@ function DrawGraphic() {
 				width: parhst[ppt].Gw,
 				height: window.innerHeight * sheight,
 				barmode: stmode,
+				bargap: 0.1,
 				stackgroup: "-",
 				margin: {
 					b: 150,
@@ -6199,6 +6185,7 @@ function FinishFiles() {
 							data[n] = data[data.length - 1];
 							data.pop();
 						} else {
+							data[n][hdrpos] = data[n][hdrpos].toLowerCase();
 							n = n + 1;
 						}
 						if (n > data.length - 1) {
@@ -6366,6 +6353,37 @@ function FindRepl() {
 					header[selhdr][1] = "-";
 				}
 			}
+		}
+		header[selhdr][3] = "";
+		HeaderTyp();
+		Preview();
+	} catch (err) {
+		AddError(err);
+	}
+}
+
+function CnvUpp() {
+	try {
+		for (let n = 0; n < data.length; n++) {
+			if (isNaN(data[n][selhdr])) {
+				data[n][selhdr] = data[n][selhdr].toUpperCase();
+			} 
+		}
+		header[selhdr][3] = "";
+		HeaderTyp();
+		Preview();
+	} catch (err) {
+		AddError(err);
+	}
+}
+
+
+function CnvLow() {
+	try {
+		for (let n = 0; n < data.length; n++) {
+			if (isNaN(data[n][selhdr])) {
+				data[n][selhdr] = data[n][selhdr].toLowerCase();
+			} 
 		}
 		header[selhdr][3] = "";
 		HeaderTyp();
@@ -8840,6 +8858,8 @@ function Preview() {
 		str += " <div id=\"IDspl\" style=\"display: inline-block;\"></div>";
 		str += " <div id=\"IDcol\" style=\"display: inline-block;\"></div>";
 		str += " <div id=\"IDcnv\" style=\"display: inline-block;\"></div>";
+		str += " <div id=\"IDUpp\" style=\"display: inline-block;\"></div>";
+		str += " <div id=\"IDLow\" style=\"display: inline-block;\"></div>";
 		str += " <div id=\"IDpie\" style=\"display: inline-block;\"></div><br><br>";
 		str += " <button onclick=\"ExpPre()\">Download Data</button>";
 		str += " <button onclick=\"RemDuplicates()\">Remove Duplicates</button>";
@@ -10330,9 +10350,17 @@ function ScaleAxis(eventdata) {
 					}
 					case "category": {
 						if (xmin < 0) {
-							txmin = vdat[0];
+							if (vdat[0].s == "") {
+									txmin = vdat[0].x;
+							} else {								
+								txmin = vdat[0].s + " " + vdat[0].x;
+							}
 						} else if (xmin > (vdat.length - 1)) {
-							txmin = vdat[vdat.length - 1];
+							if (vdat[vdat.length - 1].s == "") {
+									txmin = vdat[vdat.length - 1].x;
+							} else {								
+								txmin = vdat[vdat.length - 1].s + " " + vdat[vdat.length - 1].x;
+							}
 						} else {
 							txmin = vdat[Math.ceil(xmin)].x;
 						}
@@ -10349,9 +10377,17 @@ function ScaleAxis(eventdata) {
 					}
 					case "category": {
 						if (xmax < 0) {
-							txmax = vdat[0];
+							if (vdat[0].s == "") {
+									txmax = vdat[0].x;
+							} else {								
+								txmax = vdat[0].s + " " + vdat[0].x;
+							}
 						} else if (xmax > (vdat.length - 1)) {
-							txmax = vdat[vdat.length - 1];
+							if (vdat[vdat.length - 1].s == "") {
+									txmax = vdat[vdat.length - 1].x;
+							} else {								
+								txmax = vdat[vdat.length - 1].s + " " + vdat[vdat.length - 1].x;
+							}
 						} else {
 							txmax = vdat[Math.ceil(xmax)].x;
 						}
@@ -10516,6 +10552,14 @@ function SHdr() {
 		if (selhdr > 1) {
 			document.getElementById("IDcol").innerHTML =
 				"<button onclick=\"DelCol()\"   title=\"Delete Column\" >Delete Column</button>";
+		}
+		if (selhdr > 1) {
+			document.getElementById("IDUpp").innerHTML =
+				"<button onclick=\"CnvUpp()\"   title=\"Convert to Upper Case\" >Upper Case</button>";
+		}
+		if (selhdr > 1) {
+			document.getElementById("IDLow").innerHTML =
+				"<button onclick=\"CnvLow()\"   title=\"Convert to Lower Case\" >Lower Case</button>";
 		}
 		if (selhdr > 1 && header[selhdr][1] == "t") {
 			document.getElementById("IDcnv").innerHTML =
@@ -12168,7 +12212,7 @@ function UpdateGraph() { // RESTORE async
 			}
 			for (let i = 0; i < vdat.length; i++) {
 				xmin = i;
-				if (vdat[i].x.trim() > parhst[ppt].xinpmin.trim()) {
+				if (vdat[i].x.trim() >= parhst[ppt].xinpmin.trim()) {
 					break;
 				}
 			}
@@ -12182,7 +12226,7 @@ function UpdateGraph() { // RESTORE async
 				parhst[ppt].xinpmax = vdat[vdat.length - 1].x
 			}
 			for (let i = vdat.length - 1; i > 0; i--) {
-				if (vdat[i].x.trim() < parhst[ppt].xinpmax.trim()) {
+				if (vdat[i].x.trim() <= parhst[ppt].xinpmax.trim()) {
 					break;
 				}
 				xmax = i;
